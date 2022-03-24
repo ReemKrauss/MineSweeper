@@ -72,8 +72,6 @@ function renderMat(mat) {
         strHTML += '<tr>';
         for (var j = 0; j < mat[0].length; j++) {
             var cell = ''
-            // if (mat[i][j].isMine) cell = MINE; //בשביל בדיקות
-            // else if (mat[i][j].minesAroundCount) cell = mat[i][j].minesAroundCount
             var className = 'cell cell-' + i + '-' + j;
             strHTML += `<td class="${className}"  oncontextmenu="cellRightClicked(event,this,${i},${j})"
              onclick="cellClicked(this,${i},${j})">${cell} </td>`
