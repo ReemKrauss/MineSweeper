@@ -6,6 +6,7 @@ const NOT_HAPPY = '🤯'
 const HAPPY = '😎'
 const NORMAL = '🙂'
 var gElSmile = document.querySelector('.smile')
+var gSound = document.getElementById('sound')
 var gBoard
 var gStartTime
 var gTimerInterval
@@ -18,6 +19,8 @@ var gGame = {
 
 
 function init(size = gLevel.size, mines = gLevel.mines) {
+    gSound.pause()
+    gSound.currentTime = 0
     clearInterval(gTimerInterval)
     gStartTime = null
     gElSmile.innerText = NORMAL
@@ -179,8 +182,7 @@ function cellRightClicked(ev, elCell, i, j) {
 function loss() {
     gElSmile.innerText = NOT_HAPPY
     gGame.isOn = false
-    var sound = document.getElementById('sound')
-    sound.play()
+    gSound.play()
     clearInterval(gTimerInterval)
     var mines = getMines()
     for (var i = 0; i < mines.length; i++) {
