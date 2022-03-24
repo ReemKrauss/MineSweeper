@@ -2,14 +2,17 @@
 const MINE = '💩'
 const MARK = '⛳'
 const EMPTY = ''
+const LIFE = '❤️'
 const NOT_HAPPY = '🤯'
 const HAPPY = '😎'
 const NORMAL = '🙂'
 var gElSmile = document.querySelector('.smile')
 var gSound = document.getElementById('sound')
+var gElHeart = document.querySelector('.heart')
 var gBoard
 var gStartTime
 var gTimerInterval
+var gHeartCount
 var gLevel = { size: 4, mines: 2 };
 var gGame = {
     isOn: false,
@@ -24,6 +27,8 @@ function init(size = gLevel.size, mines = gLevel.mines) {
     clearInterval(gTimerInterval)
     gStartTime = null
     gElSmile.innerText = NORMAL
+    gHeartCount = 3
+    gElHeart.innerText = '❤️❤️❤️'
     gGame.isOn = true
     gLevel.size = size
     gLevel.mines = mines
@@ -67,7 +72,7 @@ function renderMat(mat) {
         strHTML += '<tr>';
         for (var j = 0; j < mat[0].length; j++) {
             var cell = ''
-            if (mat[i][j].isMine) cell = MINE;
+            // if (mat[i][j].isMine) cell = MINE; //בשביל בדיקות
             // else if (mat[i][j].minesAroundCount) cell = mat[i][j].minesAroundCount
             var className = 'cell cell-' + i + '-' + j;
             strHTML += `<td class="${className}"  oncontextmenu="cellRightClicked(event,this,${i},${j})"
@@ -116,7 +121,7 @@ function cellClicked(elCell, i, j) {
     if (!gStartTime) {
         createMines(i, j)
         setMinesNegsCount()
-        renderMat(gBoard)
+        // renderMat(gBoard)
         startTimer()
     }
     var location = { i: i, j: j }
@@ -130,7 +135,7 @@ function cellClicked(elCell, i, j) {
         renderCell(location, currCell.minesAroundCount)
         elCell.style.border = '1px rgb(255, 255, 255) solid'
         if (isVictory()) victory()
-    } else if (!currCell.minesAroundCoun&&!currCell.isMine) {
+    } else if (!currCell.minesAroundCoun && !currCell.isMine) {
         currCell.isShown = true
         gGame.shownCount++
         elCell.style.border = '1px rgb(255, 255, 255) solid'
@@ -162,7 +167,7 @@ function expand(i, j) {
 function cellRightClicked(ev, elCell, i, j) {
     ev.preventDefault();
     if (!gGame.isOn) return
-    if (!gStartTime) startTimer()
+    if (!gStartTime) return
     var location = { i: i, j: j }
     var currCell = gBoard[i][j]
     if (currCell.isShown) return
@@ -180,6 +185,19 @@ function cellRightClicked(ev, elCell, i, j) {
 }
 
 function loss() {
+    if (gHeartCount) {
+        gHeartCount--
+        var strText = ''
+        for (var i = 0; i < gHeartCount; i++) {
+            strText += LIFE
+        }
+        if (!strText) {
+            gElHeart.innerText = '⚠️'
+            return
+        }
+        gElHeart.innerText = strText
+        return
+    }
     gElSmile.innerText = NOT_HAPPY
     gGame.isOn = false
     gSound.play()
